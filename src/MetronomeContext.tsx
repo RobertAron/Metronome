@@ -36,7 +36,6 @@ export function MetronomeContextProvider({
   const sound = useSound();
   const [lastPlayedSoundAt, setLastPlayedSoundAt] = useState(0);
   function playSound() {
-    console.log('play sound?')
     sound?.replayAsync();
     setLastPlayedSoundAt(Date.now());
   }
