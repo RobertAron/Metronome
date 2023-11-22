@@ -1,6 +1,5 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
-import { Audio } from "expo-av";
 import { TapIn } from "./src/TapIn";
 import { MetronomeContext } from "./src/MetronomeContext";
 import { MetronomeSlider } from "./src/Slider";
