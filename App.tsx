@@ -4,6 +4,13 @@ import { TapIn } from "./src/TapIn";
 import { MetronomeContext } from "./src/MetronomeContext";
 import { MetronomeSlider } from "./src/Slider";
 import { PauseButton } from "./src/PauseButton";
+import { NativeWindStyleSheet } from "nativewind";
+import "./styles.css";
+
+
+NativeWindStyleSheet.setOutput({
+  default: "native",
+});
 
 export default function App() {
   return (
