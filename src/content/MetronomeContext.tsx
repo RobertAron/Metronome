@@ -1,12 +1,13 @@
-import { Audio } from "expo-av";
 import React, {
   createContext,
   useContext,
   useEffect,
   useState,
   Dispatch,
+  useCallback,
 } from "react";
-import useSWR from "swr";
+import met1 from "./metsound.mp3";
+import met2 from "./metsound2.mp3";
 
 const setIsPlayingDefault: Dispatch<React.SetStateAction<boolean>> = () => {};
 const setIsBpmDefault: Dispatch<React.SetStateAction<number>> = () => {};
@@ -17,28 +18,8 @@ const MetronomeContext = createContext({
   setIsPlaying: setIsPlayingDefault,
 });
 
-Audio.setAudioModeAsync({
-  allowsRecordingIOS: false,
-  staysActiveInBackground: true,
-  playsInSilentModeIOS: true,
-})
-
-const soundPromise = Audio.Sound.createAsync(require("../assets/metsound.mp3"));
-const soundPromise2 = Audio.Sound.createAsync(
-  require("../assets/metsound2.mp3")
-);
-
-function useSound() {
-  const { data } = useSWR(["metsound"], () =>
-    Promise.all([soundPromise, soundPromise2])
-  );
-  const [sound1, sound2] = data ?? [];
-  const result: [Audio.Sound, Audio.Sound] | undefined =
-    sound1?.status.isLoaded && sound2?.status.isLoaded
-      ? [sound1.sound, sound2.sound]
-      : undefined;
-  return result;
-}
+const sound1 = new Audio(met1);
+const sound2 = new Audio(met2);
 
 type BeatTypes = "primary" | "secondary" | "rest";
 type MetronomeContextProviderProps = {
@@ -55,27 +36,29 @@ export function MetronomeContextProvider({
 }: MetronomeContextProviderProps) {
   const [bpm, setBpm] = useState(100);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [sound1, sound2] = useSound() ?? [];
   const [lastPlayedSoundAt, setLastPlayedSoundAt] = useState<LastSoundInfo>({
     lastIndexPlayed: -1,
     lastPlayedAt: 0,
   });
-  const [beats, setBeats] = useState<BeatTypes[]>([
+  const [beats, _setBeats] = useState<BeatTypes[]>([
     "primary",
     "secondary",
     "secondary",
     "secondary",
   ]);
 
-  function playSound(soundIndex: number) {
-    const type = beats[soundIndex];
-    if (type === "primary") sound1?.replayAsync();
-    else if (type === "secondary") sound2?.replayAsync();
-    setLastPlayedSoundAt({
-      lastIndexPlayed: soundIndex,
-      lastPlayedAt: Date.now(),
-    });
-  }
+  const playSound = useCallback(
+    (soundIndex: number) => {
+      const type = beats[soundIndex];
+      if (type === "primary") sound1.play();
+      else if (type === "secondary") sound2.play();
+      setLastPlayedSoundAt({
+        lastIndexPlayed: soundIndex,
+        lastPlayedAt: Date.now(),
+      });
+    },
+    [beats]
+  );
   useEffect(() => {
     // after something gets played, setup for the next sound.
     if (isPlaying) {
@@ -88,7 +71,7 @@ export function MetronomeContextProvider({
       }, timeUntilNextSound);
       return () => clearTimeout(timeout);
     }
-  }, [bpm, isPlaying, lastPlayedSoundAt]);
+  }, [bpm, isPlaying, lastPlayedSoundAt, beats, playSound]);
   return (
     <MetronomeContext.Provider
       value={{

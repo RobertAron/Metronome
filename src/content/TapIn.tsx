@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Button, View } from "react-native";
 import { useMetronomeContext } from "./MetronomeContext";
 
 const tapInCircleClasses =
@@ -31,29 +30,27 @@ export function TapIn() {
     return () => clearInterval(interval);
   }, [tapInTimes]);
   return (
-    <>
-      <View>
-        <View className="bg-slate-400">
-          <Button onPress={updateTapInTimes} title="tap in" />
-        </View>
-        <View style={{ display: "flex" }}>
-          {/* {tapInTimes.map((ele, index) => (
+    <div>
+      <div className="bg-slate-400">
+        <button onClick={updateTapInTimes}>tap in</button>
+      </div>
+      <div style={{ display: "flex" }}>
+        {/* {tapInTimes.map((ele, index) => (
             <Text key={index}>{((ele - tapInTimes[0]) / 1000).toFixed(2)}</Text>
           ))} */}
-          <View className="flex flex-row justify-between">
-            {new Array(4).fill(null).map((_, index) => (
-              <View
-                key={index}
-                className={`${tapInCircleClasses} ${
-                  tapInTimes[index]
-                    ? tapInCircledFilledClasses
-                    : tapInCircledEmptyClasses
-                }`}
-              />
-            ))}
-          </View>
-        </View>
-      </View>
-    </>
+        <div className="flex flex-row justify-between">
+          {new Array(4).fill(null).map((_, index) => (
+            <div
+              key={index}
+              className={`${tapInCircleClasses} ${
+                tapInTimes[index]
+                  ? tapInCircledFilledClasses
+                  : tapInCircledEmptyClasses
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
