@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'Geist';
+  src: url(./GeistVariableVF.woff2) format('woff2');
+  font-weight: 100 900; /* Define the range of supported font weights */
+  font-style: normal; /* Adjust for italic or other styles if available */
+  font-variation-settings: 'wght' 100 900; /* Define the font weight axis */
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url(./GeistMonoVariableVF.ttf) format('woff2');
+  font-weight: 100 900; /* Define the range of supported font weights */
+  font-style: normal; /* Adjust for italic or other styles if available */
+  font-variation-settings: 'wght' 100 900; /* Define the font weight axis */
+}
