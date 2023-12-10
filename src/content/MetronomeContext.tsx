@@ -3,34 +3,37 @@ import React, {
   useContext,
   useEffect,
   useState,
-  Dispatch,
   useCallback,
 } from "react";
 import met1 from "./metsound.mp3";
 import met2 from "./metsound2.mp3";
 
 type LastSoundInfo = {
-  lastIndexPlayed: number;
+  lastPlayedBeat: number;
+  lastPlayedSubbeat: number;
   lastPlayedAt: number;
 };
 
-const lastSoundDefault: LastSoundInfo = {
-  lastIndexPlayed: -1,
+const lastSoundInit: LastSoundInfo = {
+  lastPlayedBeat: 0,
+  lastPlayedSubbeat: -1,
   lastPlayedAt: 0,
 };
+const lastSoundDefault = null as LastSoundInfo | null;
 
 export type BeatType = "primary" | "secondary" | "rest";
-const beatDefault: BeatType[] = [
-  "primary",
-  "secondary",
-  "secondary",
-  "secondary",
+const beatDefault: BeatType[][] = [
+  ["primary"],
+  ["secondary"],
+  ["secondary"],
+  ["secondary"],
 ];
-const setBeatsDefault: (beats: BeatType[]) => void = () => {};
+const setBeatsDefault: (beats: BeatType[][]) => void = () => {};
 
-const setIsPlayingDefault: Dispatch<React.SetStateAction<boolean>> = () => {};
+const setIsPlayingDefault: (isPlaying: boolean) => void = () => {};
 const setIsBpmDefault: (bpm: number) => void = () => {};
 const setPercentSpeedDefault: (bpm: number) => void = () => {};
+
 const MetronomeContext = createContext({
   bpm: 100,
   setBpm: setIsBpmDefault,
@@ -76,53 +79,60 @@ export function MetronomeContextProvider({
   children,
 }: MetronomeContextProviderProps) {
   const [bpm, setBpm] = useState(100);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [lastPlayedSoundAt, setLastPlayedSoundAt] =
-    useState<LastSoundInfo>(lastSoundDefault);
+    useState<LastSoundInfo | null>(null);
   const [beats, setBeats] = useState(beatDefault);
   const [percentSpeed, setPercentSpeed] = useState(1);
+  const isPlaying = lastPlayedSoundAt !== null;
 
   const playSound = useCallback(
-    (soundIndex: number) => {
-      const type = beats[soundIndex];
+    (beatIndex: number, subBeatIndex: number) => {
+      const type = beats[beatIndex][subBeatIndex];
       if (type === "primary") sound1.play();
       else if (type === "secondary") sound2.play();
       setLastPlayedSoundAt({
-        lastIndexPlayed: soundIndex,
+        lastPlayedBeat: beatIndex,
+        lastPlayedSubbeat: subBeatIndex,
         lastPlayedAt: Date.now(),
       });
     },
     [beats]
   );
   useEffect(() => {
+    const beatsMax = beats.length;
+    const subdivisionMax = beats[0].length;
     // after something gets played, setup for the next sound.
     if (isPlaying) {
-      const msPerBeat = (1 / (bpm * percentSpeed)) * 60 * 1000;
-      const nextSoundAt = msPerBeat + lastPlayedSoundAt.lastPlayedAt;
+      const soundsPerMinute = bpm * percentSpeed * subdivisionMax;
+      const msPerSound = (1 / soundsPerMinute) * 60 * 1000;
+      const nextSoundAt = msPerSound + lastPlayedSoundAt.lastPlayedAt;
       const timeUntilNextSound = Math.max(nextSoundAt - Date.now(), 0);
-      const nextIndex = (lastPlayedSoundAt.lastIndexPlayed + 1) % beats.length;
+
+      let nextBeat = lastPlayedSoundAt.lastPlayedBeat;
+      let nextSubbeat = lastPlayedSoundAt.lastPlayedSubbeat + 1;
+      if (nextSubbeat >= subdivisionMax) {
+        nextBeat += 1;
+        nextSubbeat = 0;
+      }
+      if (nextBeat >= beatsMax) {
+        nextBeat = 0;
+      }
       // switch to request animation frame to fix the tabout issue
       const timeout = setTimeout(() => {
-        playSound(nextIndex);
+        playSound(nextBeat, nextSubbeat);
       }, timeUntilNextSound);
       return () => clearTimeout(timeout);
     }
   }, [bpm, isPlaying, lastPlayedSoundAt, beats, playSound, percentSpeed]);
-  type dispatchParameter = Parameters<
-    Dispatch<React.SetStateAction<boolean>>
-  >[0];
-  const setIsPlayingWrapper = useCallback(
-    (isPlayingDispatch: dispatchParameter) => {
-      if (typeof isPlayingDispatch === "function")
-        setIsPlaying(isPlayingDispatch);
-      else setIsPlaying(isPlayingDispatch);
-      setLastPlayedSoundAt(lastSoundDefault);
-    },
-    []
-  );
+
+  const setIsPlayingWrapper = useCallback((isPlaying: boolean) => {
+    if (isPlaying) setLastPlayedSoundAt(lastSoundInit);
+    setLastPlayedSoundAt(isPlaying ? lastSoundInit : null);
+  }, []);
   const setBpmWrapper = useCallback((bpm: number) => {
     setBpm(clamp(1, 300, bpm));
   }, []);
+  console.log({ bpm, isPlaying, lastPlayedSoundAt, beats, percentSpeed });
   return (
     <MetronomeContext.Provider
       value={{
