@@ -30,6 +30,7 @@ const setBeatsDefault: (beats: BeatType[]) => void = () => {};
 
 const setIsPlayingDefault: Dispatch<React.SetStateAction<boolean>> = () => {};
 const setIsBpmDefault: (bpm: number) => void = () => {};
+const setPercentSpeedDefault: (bpm: number) => void = () => {};
 const MetronomeContext = createContext({
   bpm: 100,
   setBpm: setIsBpmDefault,
@@ -38,6 +39,8 @@ const MetronomeContext = createContext({
   lastPlayedSoundAt: lastSoundDefault,
   beats: beatDefault,
   setBeats: setBeatsDefault,
+  percentSpeed: 1,
+  setPercentSpeed: setPercentSpeedDefault,
 });
 
 const sound1 = new Audio(met1);
@@ -59,6 +62,7 @@ export function MetronomeContextProvider({
   const [lastPlayedSoundAt, setLastPlayedSoundAt] =
     useState<LastSoundInfo>(lastSoundDefault);
   const [beats, setBeats] = useState(beatDefault);
+  const [percentSpeed, setPercentSpeed] = useState(1);
 
   const playSound = useCallback(
     (soundIndex: number) => {
@@ -75,7 +79,7 @@ export function MetronomeContextProvider({
   useEffect(() => {
     // after something gets played, setup for the next sound.
     if (isPlaying) {
-      const msPerBeat = (1 / bpm) * 60 * 1000;
+      const msPerBeat = (1 / (bpm * percentSpeed)) * 60 * 1000;
       const nextSoundAt = msPerBeat + lastPlayedSoundAt.lastPlayedAt;
       const timeUntilNextSound = Math.max(nextSoundAt - Date.now(), 0);
       const nextIndex = (lastPlayedSoundAt.lastIndexPlayed + 1) % beats.length;
@@ -85,7 +89,7 @@ export function MetronomeContextProvider({
       }, timeUntilNextSound);
       return () => clearTimeout(timeout);
     }
-  }, [bpm, isPlaying, lastPlayedSoundAt, beats, playSound]);
+  }, [bpm, isPlaying, lastPlayedSoundAt, beats, playSound, percentSpeed]);
   type dispatchParameter = Parameters<
     Dispatch<React.SetStateAction<boolean>>
   >[0];
@@ -111,6 +115,8 @@ export function MetronomeContextProvider({
         lastPlayedSoundAt,
         beats,
         setBeats,
+        percentSpeed,
+        setPercentSpeed,
       }}
     >
       {children}

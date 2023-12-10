@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import { useMetronomeContext } from "./MetronomeContext";
-
-const tapInCircleClasses =
-  "aspect-square rounded-full w-3 flex-grow, border-2 border-black flex-shrink-0";
-const tapInCircledEmptyClasses = "bg-transparent";
-const tapInCircledFilledClasses = "bg-blue-800";
+import { cn } from "../other/cn";
 
 export function TapIn() {
   const { setBpm } = useMetronomeContext();
@@ -30,27 +26,17 @@ export function TapIn() {
     return () => clearInterval(interval);
   }, [tapInTimes]);
   return (
-    <div>
-      <div className="bg-slate-400">
-        <button onClick={updateTapInTimes}>tap in</button>
-      </div>
-      <div style={{ display: "flex" }}>
-        {/* {tapInTimes.map((ele, index) => (
-            <Text key={index}>{((ele - tapInTimes[0]) / 1000).toFixed(2)}</Text>
-          ))} */}
-        <div className="flex flex-row justify-between">
-          {new Array(4).fill(null).map((_, index) => (
-            <div
-              key={index}
-              className={`${tapInCircleClasses} ${
-                tapInTimes[index]
-                  ? tapInCircledFilledClasses
-                  : tapInCircledEmptyClasses
-              }`}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
+    <button
+      className={cn("bg-cyan-400 text-black border-4 border-cyan-400 p-2", {
+        "bg-green-300": tapInTimes.length === 4,
+        "border-t-green-300": tapInTimes.length >= 1,
+        "border-r-green-300": tapInTimes.length >= 2,
+        "border-b-green-300": tapInTimes.length >= 3,
+        "border-l-green-300": tapInTimes.length >= 4,
+      })}
+      onClick={updateTapInTimes}
+    >
+      TAP IN
+    </button>
   );
 }
