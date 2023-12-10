@@ -43,8 +43,26 @@ const MetronomeContext = createContext({
   setPercentSpeed: setPercentSpeedDefault,
 });
 
-const sound1 = new Audio(met1);
-const sound2 = new Audio(met2);
+// allow sound to overlap
+function SuperAudio(src: string) {
+  const context = new AudioContext();
+  let audioBuffer: AudioBuffer | null = null;
+  fetch(src)
+    .then((response) => response.arrayBuffer())
+    .then((arrayBuffer) => context.decodeAudioData(arrayBuffer))
+    .then((bufffer) => (audioBuffer = bufffer));
+  return {
+    play() {
+      const bufferSource = context.createBufferSource();
+      bufferSource.buffer = audioBuffer;
+      bufferSource.connect(context.destination);
+      bufferSource.start();
+    },
+  };
+}
+
+const sound1 = SuperAudio(met1);
+const sound2 = SuperAudio(met2);
 
 type MetronomeContextProviderProps = {
   children: React.ReactNode;
