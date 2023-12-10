@@ -99,7 +99,7 @@ export function MetronomeContextProvider({
     []
   );
   const setBpmWrapper = useCallback((bpm: number) => {
-    setBpm(clamp(1, 200, bpm));
+    setBpm(clamp(1, 300, bpm));
   }, []);
   return (
     <MetronomeContext.Provider

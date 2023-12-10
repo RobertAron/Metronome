@@ -6,7 +6,12 @@ export function PauseButton() {
   return (
     <div className="flex">
       <button
-        className="bg-[#b5d5de] text-black border border-[#2b373e] rounded p-2"
+        className={cn(
+          "bg-cyan-400 text-black border border-[#2b373e] rounded p-2 w-full",
+          {
+            "bg-green-300": isPlaying,
+          }
+        )}
         onClick={() => setIsPlaying(!isPlaying)}
       >
         {isPlaying ? "Playing" : "Paused"}
