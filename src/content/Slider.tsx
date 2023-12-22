@@ -8,7 +8,7 @@ export function MetronomeSlider() {
   // tap in
   return (
     <Slider.Root
-      className="relative flex items-center select-none touch-none h-[200px] w-5"
+      className="relative flex items-center select-none touch-none w-5"
       defaultValue={[100]}
       max={300}
       min={40}
