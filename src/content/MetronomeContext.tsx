@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import met1 from "./metsound.mp3";
 import met2 from "./metsound2.mp3";
+import { workerUrlBlob } from "./MetronomeWorker";
 
 type LastSoundInfo = {
   lastPlayedBeat: number;
@@ -67,6 +68,8 @@ function SuperAudio(src: string) {
 const sound1 = SuperAudio(met1);
 const sound2 = SuperAudio(met2);
 
+const myWorker = new Worker(workerUrlBlob);
+
 type MetronomeContextProviderProps = {
   children: React.ReactNode;
 };
@@ -117,11 +120,16 @@ export function MetronomeContextProvider({
       if (nextBeat >= beatsMax) {
         nextBeat = 0;
       }
+      myWorker.postMessage({
+        time: timeUntilNextSound,
+        params: [nextBeat, nextSubbeat],
+      });
       // switch to request animation frame to fix the tabout issue
-      const timeout = setTimeout(() => {
-        playSound(nextBeat, nextSubbeat);
-      }, timeUntilNextSound);
-      return () => clearTimeout(timeout);
+      myWorker.onmessage = (m) => {
+        playSound(...(m.data as [number, number]));
+      };
+
+      return () => myWorker.postMessage({});
     }
   }, [bpm, isPlaying, lastPlayedSoundAt, beats, playSound, percentSpeed]);
 
@@ -132,7 +140,6 @@ export function MetronomeContextProvider({
   const setBpmWrapper = useCallback((bpm: number) => {
     setBpm(clamp(1, 300, bpm));
   }, []);
-  console.log({ bpm, isPlaying, lastPlayedSoundAt, beats, percentSpeed });
   return (
     <MetronomeContext.Provider
       value={{

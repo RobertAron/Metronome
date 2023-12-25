@@ -4,7 +4,6 @@ import { MetronomeContext } from "./content/MetronomeContext";
 import { PauseButton } from "./content/PauseButton";
 import { PercentSpeed } from "./content/PercentSpeed";
 import { MetronomeSlider } from "./content/Slider";
-import { SoundTypeControls } from "./content/SoundTypeControls";
 import { TapIn } from "./content/TapIn";
 
 function App() {
@@ -19,7 +18,6 @@ function App() {
               <PercentSpeed />
             </div>
             <BeatSelect />
-            <SoundTypeControls />
             <PauseButton />
           </div>
           <MetronomeSlider />
