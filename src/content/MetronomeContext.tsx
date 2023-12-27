@@ -46,21 +46,25 @@ const MetronomeContext = createContext({
   percentSpeed: 1,
   setPercentSpeed: setPercentSpeedDefault,
 });
+const context = new AudioContext();
+const lowerGainTarget = context.createGain();
+lowerGainTarget.gain.value = 0.7;
+lowerGainTarget.connect(context.destination);
 
 // allow sound to overlap
 function SuperAudio(src: string) {
-  const context = new AudioContext();
   let audioBuffer: AudioBuffer | null = null;
   fetch(src)
     .then((response) => response.arrayBuffer())
     .then((arrayBuffer) => context.decodeAudioData(arrayBuffer))
     .then((bufffer) => (audioBuffer = bufffer));
   return {
-    play() {
+    play(delay: number, emphasize: boolean) {
       const bufferSource = context.createBufferSource();
       bufferSource.buffer = audioBuffer;
-      bufferSource.connect(context.destination);
-      bufferSource.start();
+      bufferSource.connect(emphasize ? context.destination : lowerGainTarget);
+      bufferSource.context.createGain();
+      bufferSource.start(context.currentTime + delay / 1000);
     },
   };
 }
@@ -92,8 +96,16 @@ export function MetronomeContextProvider({
     // played it should be included because this could be called at the wrong time if the event loop doesn't call it precisely
     (beatIndex: number, subBeatIndex: number, playedAt: number) => {
       const type = beats[beatIndex][subBeatIndex];
-      if (type === "primary") sound1.play();
-      else if (type === "secondary") sound2.play();
+      // sound is played 50 ms late just incase this fn is called late
+      const timeUntilPlay = playedAt + 100 - Date.now();
+      console.log(timeUntilPlay);
+      const timeUntilPlayProtected = Math.max(timeUntilPlay, 0);
+      console.log(timeUntilPlay);
+      const emphasize = subBeatIndex === 0;
+      if (type === "primary") sound1.play(timeUntilPlayProtected, emphasize);
+      else if (type === "secondary")
+        sound2.play(timeUntilPlayProtected, emphasize);
+      // when the beat is confirmed to have played - setup the state to reflext it has played
       setLastPlayedSoundAt({
         lastPlayedBeat: beatIndex,
         lastPlayedSubbeat: subBeatIndex,
