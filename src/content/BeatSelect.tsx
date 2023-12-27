@@ -8,7 +8,6 @@ import React from "react";
 import { cn } from "../other/cn";
 import { rhythmOptions } from "../other/rhythmOptions";
 import { useMetronomeContext } from "./MetronomeContext";
-import { Vexflow } from "./VexFlow";
 
 export const BeatSelect = () => {
   const { setBeats } = useMetronomeContext();
@@ -41,15 +40,15 @@ export const BeatSelect = () => {
                 4/4
               </Select.Label>
               {rhythmOptions.map((ele) => (
-                <SelectItem value={ele.id}>
-                  <Vexflow rhythmConfig={ele} />
+                <SelectItem value={ele.id} key={ele.id}>
+                  {ele.itemLabel}
                 </SelectItem>
               ))}
             </Select.Group>
 
             <Select.Separator className="h-[1px] bg-purple-950 m-[5px]" />
 
-            <Select.Group>
+            {/* <Select.Group>
               <Select.Label className="px-[25px] text-xs leading-[25px] text-purple-950">
                 6/8
               </Select.Label>
@@ -60,7 +59,7 @@ export const BeatSelect = () => {
               </SelectItem>
               <SelectItem value="courgette">Courgette</SelectItem>
               <SelectItem value="leek">Leek</SelectItem>
-            </Select.Group>
+            </Select.Group> */}
           </Select.Viewport>
           <Select.ScrollDownButton className="flex items-center justify-center h-[25px] bg-white text-purple-950 cursor-default">
             <ChevronDownIcon />

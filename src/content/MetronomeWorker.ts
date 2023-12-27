@@ -3,7 +3,6 @@
 const workercode = () => {
   let timeoutId: null | NodeJS.Timeout = null;
   self.onmessage = function (e) {
-    console.log("e", e.data);
     if (timeoutId !== null) clearTimeout(timeoutId);
     if (e.data.params !== undefined) {
       timeoutId = setTimeout(() => {

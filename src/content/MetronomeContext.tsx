@@ -5,8 +5,8 @@ import React, {
   useState,
   useCallback,
 } from "react";
-import met1 from "./metsound.mp3";
-import met2 from "./metsound2.mp3";
+import met1 from "./assets/metsound.mp3";
+import met2 from "./assets/metsound2.mp3";
 import { workerUrlBlob } from "./MetronomeWorker";
 
 type LastSoundInfo = {
@@ -89,18 +89,27 @@ export function MetronomeContextProvider({
   const isPlaying = lastPlayedSoundAt !== null;
 
   const playSound = useCallback(
-    (beatIndex: number, subBeatIndex: number) => {
+    // played it should be included because this could be called at the wrong time if the event loop doesn't call it precisely
+    (beatIndex: number, subBeatIndex: number, playedAt: number) => {
       const type = beats[beatIndex][subBeatIndex];
       if (type === "primary") sound1.play();
       else if (type === "secondary") sound2.play();
       setLastPlayedSoundAt({
         lastPlayedBeat: beatIndex,
         lastPlayedSubbeat: subBeatIndex,
-        lastPlayedAt: Date.now(),
+        lastPlayedAt: playedAt,
       });
     },
     [beats]
   );
+
+  useEffect(() => {
+    const soundCallback = (m: MessageEvent<[number, number, number]>) =>
+      playSound(...m.data);
+    myWorker.addEventListener("message", soundCallback);
+    return () => myWorker.removeEventListener("message", soundCallback);
+  }, [playSound]);
+
   useEffect(() => {
     const beatsMax = beats.length;
     const subdivisionMax = beats[0].length;
@@ -122,16 +131,11 @@ export function MetronomeContextProvider({
       }
       myWorker.postMessage({
         time: timeUntilNextSound,
-        params: [nextBeat, nextSubbeat],
+        params: [nextBeat, nextSubbeat, Date.now() + timeUntilNextSound],
       });
-      // switch to request animation frame to fix the tabout issue
-      myWorker.onmessage = (m) => {
-        playSound(...(m.data as [number, number]));
-      };
-
       return () => myWorker.postMessage({});
     }
-  }, [bpm, isPlaying, lastPlayedSoundAt, beats, playSound, percentSpeed]);
+  }, [bpm, isPlaying, lastPlayedSoundAt, beats, percentSpeed]);
 
   const setIsPlayingWrapper = useCallback((isPlaying: boolean) => {
     if (isPlaying) setLastPlayedSoundAt(lastSoundInit);

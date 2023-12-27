@@ -20,7 +20,6 @@
     "react-scripts": "5.0.1",
     "tailwind-merge": "^2.0.0",
     "typescript": "^4.9.5",
-    "vexflow": "^4.2.3",
     "web-vitals": "^2.1.4",
     "workbox-background-sync": "^6.6.0",
     "workbox-broadcast-update": "^6.6.0",
