@@ -5,10 +5,11 @@ import {
 } from "@radix-ui/react-icons";
 import * as Select from "@radix-ui/react-select";
 import React from "react";
-import { cn } from "../other/cn";
 import { rhythmOptions } from "../other/rhythmOptions";
 import { useMetronomeContext } from "./MetronomeContext";
 import groupBy from "lodash.groupby";
+import { cn } from "../other/cn";
+
 export const BeatSelect = () => {
   const { setBeats } = useMetronomeContext();
   return (
