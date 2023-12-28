@@ -8,7 +8,7 @@ import React from "react";
 import { cn } from "../other/cn";
 import { rhythmOptions } from "../other/rhythmOptions";
 import { useMetronomeContext } from "./MetronomeContext";
-
+import groupBy from "lodash.groupby";
 export const BeatSelect = () => {
   const { setBeats } = useMetronomeContext();
   return (
@@ -35,18 +35,25 @@ export const BeatSelect = () => {
             <ChevronUpIcon />
           </Select.ScrollUpButton>
           <Select.Viewport className="p-[5px]">
-            <Select.Group>
-              <Select.Label className="px-[25px] text-xs leading-[25px] text-purple-950">
-                4/4
-              </Select.Label>
-              {rhythmOptions.map((ele) => (
-                <SelectItem value={ele.id} key={ele.id}>
-                  {ele.itemLabel}
-                </SelectItem>
-              ))}
-            </Select.Group>
-
-            <Select.Separator className="h-[1px] bg-purple-950 m-[5px]" />
+            {Object.entries(
+              groupBy(rhythmOptions, (val) => val.id.split("-")[0])
+            ).map(([group, values], index) => (
+              <React.Fragment key={group}>
+                {index !== 0 && (
+                  <Select.Separator className="h-[1px] bg-purple-950 m-[5px]" />
+                )}
+                <Select.Group>
+                  <Select.Label className="px-[25px] text-xs leading-[25px] text-purple-950">
+                    {group}
+                  </Select.Label>
+                  {values.map((ele) => (
+                    <SelectItem value={ele.id} key={ele.id}>
+                      {ele.itemLabel}
+                    </SelectItem>
+                  ))}
+                </Select.Group>
+              </React.Fragment>
+            ))}
 
             {/* <Select.Group>
               <Select.Label className="px-[25px] text-xs leading-[25px] text-purple-950">
