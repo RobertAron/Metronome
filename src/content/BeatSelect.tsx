@@ -1,8 +1,4 @@
-import {
-  CheckIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-} from "@radix-ui/react-icons";
+import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import * as Select from "@radix-ui/react-select";
 import React from "react";
 import { rhythmOptions } from "../other/rhythmOptions";
@@ -22,20 +18,20 @@ export const BeatSelect = () => {
       defaultValue={rhythmOptions[0].id}
     >
       <Select.Trigger
-        className="inline-flex items-center justify-center rounded px-[15px] text-[13px] leading-none gap-[5px] bg-white text-purple-950 shadow-[0_2px_10px] shadow-black/10 hover:bg-mauve3 focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-purple-500 outline-none p-1"
+        className="inline-flex items-center justify-between rounded pl-[30px] px-[15px] text-[13px] leading-none gap-[5px] bg-white text-purple-950 shadow-[0_2px_10px] shadow-black/10 hover:bg-mauve3 focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-purple-500 outline-none p-1"
         aria-label="Beat Options"
       >
-        <Select.Value placeholder="Select a fruit…" />
+        <Select.Value placeholder="Select a rythm.." className="flex-grow" />
         <Select.Icon className="text-purple-950">
           <ChevronDownIcon />
         </Select.Icon>
       </Select.Trigger>
       <Select.Portal>
-        <Select.Content className="overflow-hidden bg-white rounded-md shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]">
-          <Select.ScrollUpButton className="flex items-center justify-center h-[25px] bg-white text-purple-600 cursor-default">
-            <ChevronUpIcon />
-          </Select.ScrollUpButton>
-          <Select.Viewport className="p-[5px]">
+        <Select.Content
+          className="bg-white rounded-md shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] h-[--radix-select-content-available-height] w-[--radix-select-trigger-width] overflow-y-auto"
+          position="popper"
+        >
+          <Select.Viewport className="p-1 !overflow-visible">
             {Object.entries(
               groupBy(rhythmOptions, (val) => val.id.split("-")[0])
             ).map(([group, values], index) => (
@@ -55,23 +51,7 @@ export const BeatSelect = () => {
                 </Select.Group>
               </React.Fragment>
             ))}
-
-            {/* <Select.Group>
-              <Select.Label className="px-[25px] text-xs leading-[25px] text-purple-950">
-                6/8
-              </Select.Label>
-              <SelectItem value="aubergine">Aubergine</SelectItem>
-              <SelectItem value="broccoli">Broccoli</SelectItem>
-              <SelectItem value="carrot" disabled>
-                Carrot
-              </SelectItem>
-              <SelectItem value="courgette">Courgette</SelectItem>
-              <SelectItem value="leek">Leek</SelectItem>
-            </Select.Group> */}
           </Select.Viewport>
-          <Select.ScrollDownButton className="flex items-center justify-center h-[25px] bg-white text-purple-950 cursor-default">
-            <ChevronDownIcon />
-          </Select.ScrollDownButton>
         </Select.Content>
       </Select.Portal>
     </Select.Root>

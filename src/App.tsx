@@ -13,8 +13,8 @@ function App() {
   return (
     <>
       <MetronomeContext>
-        <div className="font-sans dark:bg-slate-800 text-black dark:text-white h-full items-center flex justify-center">
-          <div className="flex">
+        <div className="font-sans dark:bg-slate-800 text-black dark:text-white h-full items-center flex justify-center p-1">
+          <div className="flex gap-2">
             <div className="flex flex-col gap-4">
               <Bpm />
               <div className="flex gap-2">
