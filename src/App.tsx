@@ -1,13 +1,13 @@
-import BeatSelect from "./content/BeatSelect";
+import { useEffect } from "react";
+import { Toaster } from "./components/ui/toaster";
+import { useToast } from "./components/ui/use-toast";
+import { BeatSelect } from "./content/BeatSelect";
 import { Bpm } from "./content/BpmVisual";
 import { MetronomeContext } from "./content/MetronomeContext";
 import { PauseButton } from "./content/PauseButton";
 import { PercentSpeed } from "./content/PercentSpeed";
 import { MetronomeSlider } from "./content/Slider";
 import { TapIn } from "./content/TapIn";
-import { Toaster } from "./components/ui/toaster";
-import { useToast } from "./components/ui/use-toast";
-import { useEffect } from "react";
 
 function App() {
   return (

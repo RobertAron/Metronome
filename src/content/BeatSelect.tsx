@@ -1,10 +1,10 @@
 import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import * as Select from "@radix-ui/react-select";
+import groupBy from "lodash.groupby";
 import React from "react";
+import { cn } from "../other/cn";
 import { rhythmOptions } from "../other/rhythmOptions";
 import { useMetronomeContext } from "./MetronomeContext";
-import groupBy from "lodash.groupby";
-import { cn } from "../other/cn";
 
 export const BeatSelect = () => {
   const { setBeats } = useMetronomeContext();
@@ -18,7 +18,7 @@ export const BeatSelect = () => {
       defaultValue={rhythmOptions[0].id}
     >
       <Select.Trigger
-        className="inline-flex items-center justify-between rounded pl-[30px] px-[15px] text-[13px] leading-none gap-[5px] bg-white text-purple-950 shadow-[0_2px_10px] shadow-black/10 hover:bg-mauve3 focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-purple-500 outline-none p-1"
+        className="inline-flex items-center justify-center rounded px-[15px] text-[13px] leading-none h-[35px] gap-[5px] bg-white text-black shadow-[0_2px_10px] shadow-black/10 hover:bg-slate-300 focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-slate-400 outline-none"
         aria-label="Beat Options"
       >
         <Select.Value placeholder="Select a rythm.." className="flex-grow" />
@@ -28,10 +28,10 @@ export const BeatSelect = () => {
       </Select.Trigger>
       <Select.Portal>
         <Select.Content
-          className="bg-white rounded-md shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] h-[--radix-select-content-available-height] w-[--radix-select-trigger-width] overflow-y-auto"
+          className="overflow-hidden bg-white rounded-md shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] overflow-y-auto max-h-[--radix-select-content-available-height] w-[--radix-select-trigger-width] max-w-[--radix-select-content-available-width]"
           position="popper"
         >
-          <Select.Viewport className="p-1 !overflow-visible">
+          <Select.Viewport className="!overflow-visible h-max p-[5px] ">
             {Object.entries(
               groupBy(rhythmOptions, (val) => val.id.split("-")[0])
             ).map(([group, values], index) => (
@@ -84,5 +84,3 @@ const SelectItem = React.forwardRef(
     );
   }
 );
-
-export default BeatSelect;
