@@ -8,13 +8,10 @@ export function MetronomeSlider({
   direction?: "vertical" | "horizontal";
 }) {
   const { bpm, setBpm } = useMetronomeContext();
-  // should have slider
-  // text exit
-  // tap in
   return (
     <Slider.Root
       className={cn(
-        "relative flex items-center select-none touch-none w-full",
+        "relative flex items-center select-none touch-none w-full group",
         direction === "vertical" ? "w-5 h-full" : "h-5 w-full"
       )}
       defaultValue={[100]}
@@ -25,11 +22,11 @@ export function MetronomeSlider({
       onValueChange={([newVal]) => setBpm(newVal)}
       orientation={direction}
     >
-      <Slider.Track className="bg-slate-600 relative grow rounded-full h-[3px]">
-        <Slider.Range className="absolute bg-white rounded-full h-full" />
+      <Slider.Track className="bg-zinc-400 group-hover:bg-zinc-500 group-focus-within:bg-zinc-500 transition-colors relative grow rounded-full h-[3px]">
+        <Slider.Range className="absolute bg-zinc-800 group-hover:bg-zinc-950 transition-colors rounded-full h-full" />
       </Slider.Track>
       <Slider.Thumb
-        className="block w-5 h-5 bg-white shadow-[0_2px_10px] shadow-blue-800 rounded-[10px] hover:bg-violet3 focus:outline-none focus:shadow-[0_0_0_5px] focus:shadow-red-600"
+        className="block w-5 h-5 bg-white border-4 border-zinc-700 hocus:border-[5px] transition-all hocus:border-amber-500 rounded-full focus:outline-none"
         aria-label="Beats Per Minute"
       />
     </Slider.Root>
