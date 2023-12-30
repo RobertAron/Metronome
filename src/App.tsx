@@ -17,14 +17,14 @@ function App() {
           <div className="flex gap-2">
             <div className="flex flex-col gap-4">
               <Bpm />
+              <MetronomeSlider />
+              <TapIn />
               <div className="flex gap-2">
-                <TapIn />
                 <PercentSpeed />
               </div>
               <BeatSelect />
               <PauseButton />
             </div>
-            <MetronomeSlider />
           </div>
         </div>
       </MetronomeContext>
