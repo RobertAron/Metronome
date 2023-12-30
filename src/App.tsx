@@ -19,9 +19,7 @@ function App() {
               <Bpm />
               <MetronomeSlider />
               <TapIn />
-              <div className="flex gap-2">
-                <PercentSpeed />
-              </div>
+              <PercentSpeed />
               <BeatSelect />
               <PauseButton />
             </div>
