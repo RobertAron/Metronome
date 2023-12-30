@@ -21,7 +21,7 @@ export const BeatSelect = () => {
         className="flex h-[35px] items-center justify-center gap-1 rounded border border-black bg-white px-1 text-lg text-black outline-none hover:bg-amber-50 focus:border-amber-500 focus:shadow-[0_0_0_2px] focus:shadow-amber-500 data-[placeholder]:text-slate-400"
         aria-label="Beat Options"
       >
-        <Select.Value placeholder="Select a rythm.." className="flex-grow" />
+        <Select.Value placeholder="Select a rhythm..." className="flex-grow" />
         <Select.Icon className="font-bold">
           <ChevronDownIcon />
         </Select.Icon>
