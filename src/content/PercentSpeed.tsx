@@ -5,7 +5,7 @@ export function PercentSpeed() {
   const { percentSpeed, setPercentSpeed } = useMetronomeContext();
   return (
     <ToggleGroup.Root
-      className="flex rounded w-full"
+      className="flex w-full rounded"
       type="single"
       defaultValue={`${percentSpeed}`}
       aria-label="Beats Per Minute Percentage Modifier"
@@ -21,7 +21,7 @@ export function PercentSpeed() {
             key={`${buttonPercent}`}
             value={`${buttonPercent}`}
             aria-label={`${buttonPercent * 100}% Speed`}
-            className="grow hover:bg-amber-200 border-y border-x-[.5px] first:border-l last:border-r border-zinc-900 focus:border-amber-500 data-[state=on]:bg-slate-900 data-[state=on]:text-white flex h-[35px] items-center justify-center text-base first:rounded-l last:rounded-r focus:outline-none focus:z-10 focus:shadow-[0_0_0_2px] focus:shadow-amber-500 py-1 px-3"
+            className="flex grow items-center justify-center border-x-[.5px] border-y border-zinc-900 px-3 py-1 text-lg first:rounded-l first:border-l last:rounded-r last:border-r hover:bg-amber-50 focus:z-10 focus:border-amber-500 focus:shadow-[0_0_0_2px] focus:shadow-amber-500 focus:outline-none data-[state=on]:bg-slate-900 data-[state=on]:text-white"
           >
             {buttonPercent * 100}%
           </ToggleGroup.Item>

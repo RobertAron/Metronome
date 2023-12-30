@@ -13,16 +13,14 @@ function App() {
   return (
     <>
       <MetronomeContext>
-        <div className="font-sans dark:bg-slate-800 text-black dark:text-white h-full items-center flex justify-center p-1">
-          <div className="flex gap-2">
-            <div className="flex flex-col gap-4">
-              <Bpm />
-              <MetronomeSlider />
-              <TapIn />
-              <PercentSpeed />
-              <BeatSelect />
-              <PauseButton />
-            </div>
+        <div className="flex h-full items-center justify-center p-1 font-sans text-black dark:bg-slate-800 dark:text-white">
+          <div className="flex flex-col gap-4">
+            <Bpm />
+            <MetronomeSlider />
+            <TapIn />
+            <PercentSpeed />
+            <BeatSelect />
+            <PauseButton />
           </div>
         </div>
       </MetronomeContext>
@@ -39,9 +37,17 @@ export function PwaToaster() {
         title: "Ready to work offline!",
       });
     };
+    const handleAppUpdated = () => {
+      toast({
+        title: "Update Complete!",
+        description: "Close all tabs to update app.",
+      });
+    };
     document.addEventListener("appOfflineReady", handleOfflineReady);
+    document.addEventListener("appUpdated", handleAppUpdated);
     return () => {
       document.removeEventListener("appOfflineReady", handleOfflineReady);
+      document.removeEventListener("appUpdated", handleAppUpdated);
     };
   }, [toast]);
   return <Toaster />;

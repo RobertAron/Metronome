@@ -48,7 +48,7 @@ const MetronomeContext = createContext({
 });
 const context = new AudioContext();
 const lowerGainTarget = context.createGain();
-lowerGainTarget.gain.value = 0.7;
+lowerGainTarget.gain.value = 0.5;
 lowerGainTarget.connect(context.destination);
 
 // allow sound to overlap
