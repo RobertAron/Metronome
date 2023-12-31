@@ -28,16 +28,24 @@ export function TapIn() {
   }, [tapInTimes]);
   return (
     <button
-      className={cn("bg-cyan-400 text-black border-4 border-cyan-400 p-2 truncate", {
-        "bg-green-300": tapInTimes.length === 4,
-        "border-t-green-300": tapInTimes.length >= 1,
-        "border-r-green-300": tapInTimes.length >= 2,
-        "border-b-green-300": tapInTimes.length >= 3,
-        "border-l-green-300": tapInTimes.length >= 4,
-      })}
+      className={
+        "hocus:shadow-[0_0_0_2px] hocus:shadow-amber-500 relative flex flex-col truncate rounded border border-black text-black hocus:border-amber-500 hocus:bg-amber-50 hocus:outline-none"
+      }
       onClick={updateTapInTimes}
     >
-      TAP IN
+      <span className="p-1">TAP IN</span>
+      <div
+        className={cn(
+          "absolute bottom-0 left-0 h-[2px] bg-amber-500 transition-all",
+          {
+            "w-[0%]": tapInTimes.length === 0,
+            "w-[25%]": tapInTimes.length === 1,
+            "w-[50%]": tapInTimes.length === 2,
+            "w-[75%]": tapInTimes.length === 3,
+            "w-[100%]": tapInTimes.length === 4,
+          },
+        )}
+      />
     </button>
   );
 }
