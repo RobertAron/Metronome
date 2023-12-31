@@ -82,6 +82,33 @@ function clamp(min: number, max: number, value: number) {
   return Math.min(Math.max(value, min), max);
 }
 
+export function timeUntilSoundCommited(
+  bpm: number,
+  percentSpeed: number,
+  beatTypes: BeatType[][],
+  lastPlayedAt: number,
+) {
+  const subdivisionMax = beatTypes[0].length;
+  const soundsPerMinute = bpm * percentSpeed * subdivisionMax;
+  const msPerSound = (1 / soundsPerMinute) * 60 * 1000;
+  const nextSoundAt = msPerSound + lastPlayedAt;
+  const timeUntilNextSound = Math.max(nextSoundAt - Date.now(), 0);
+  return timeUntilNextSound;
+}
+
+const commitToPlayDelay = 100;
+export function timeUntilSoundPlayed(
+  bpm: number,
+  percentSpeed: number,
+  subdivisionMax: BeatType[][],
+  lastPlayedAt: number,
+) {
+  return (
+    timeUntilSoundCommited(bpm, percentSpeed, subdivisionMax, lastPlayedAt) +
+    commitToPlayDelay
+  );
+}
+
 export function MetronomeContextProvider({
   children,
 }: MetronomeContextProviderProps) {
@@ -92,15 +119,13 @@ export function MetronomeContextProvider({
   const [percentSpeed, setPercentSpeed] = useState(1);
   const isPlaying = lastPlayedSoundAt !== null;
 
-  const playSound = useCallback(
+  const commitToSound = useCallback(
     // played it should be included because this could be called at the wrong time if the event loop doesn't call it precisely
     (beatIndex: number, subBeatIndex: number, playedAt: number) => {
       const type = beats[beatIndex][subBeatIndex];
-      // sound is played 50 ms late just incase this fn is called late
-      const timeUntilPlay = playedAt + 100 - Date.now();
-      console.log(timeUntilPlay);
+      // sound is scheduled to be played late because the event loop isn't perfect.
+      const timeUntilPlay = playedAt + commitToPlayDelay - Date.now();
       const timeUntilPlayProtected = Math.max(timeUntilPlay, 0);
-      console.log(timeUntilPlay);
       const emphasize = subBeatIndex === 0;
       if (type === "primary") sound1.play(timeUntilPlayProtected, emphasize);
       else if (type === "secondary")
@@ -112,26 +137,28 @@ export function MetronomeContextProvider({
         lastPlayedAt: playedAt,
       });
     },
-    [beats]
+    [beats],
   );
 
   useEffect(() => {
     const soundCallback = (m: MessageEvent<[number, number, number]>) =>
-      playSound(...m.data);
+      commitToSound(...m.data);
     myWorker.addEventListener("message", soundCallback);
     return () => myWorker.removeEventListener("message", soundCallback);
-  }, [playSound]);
+  }, [commitToSound]);
 
   useEffect(() => {
-    const beatsMax = beats.length;
-    const subdivisionMax = beats[0].length;
     // after something gets played, setup for the next sound.
     if (isPlaying) {
-      const soundsPerMinute = bpm * percentSpeed * subdivisionMax;
-      const msPerSound = (1 / soundsPerMinute) * 60 * 1000;
-      const nextSoundAt = msPerSound + lastPlayedSoundAt.lastPlayedAt;
-      const timeUntilNextSound = Math.max(nextSoundAt - Date.now(), 0);
+      const timeUntilNextSound = timeUntilSoundCommited(
+        bpm,
+        percentSpeed,
+        beats,
+        lastPlayedSoundAt.lastPlayedAt,
+      );
 
+      const beatsMax = beats.length;
+      const subdivisionMax = beats[0].length;
       let nextBeat = lastPlayedSoundAt.lastPlayedBeat;
       let nextSubbeat = lastPlayedSoundAt.lastPlayedSubbeat + 1;
       if (nextSubbeat >= subdivisionMax) {
