@@ -46,7 +46,7 @@ const MetronomeContext = createContext({
   setBeats: setBeatsDefault,
   percentSpeed: 1,
   setPercentSpeed: setPercentSpeedDefault,
-  motionRef: null! as MotionValue<string>,
+  motionRef: null! as MotionValue<number>,
 });
 const context = new AudioContext();
 const lowerGainTarget = context.createGain();
@@ -90,7 +90,7 @@ const commitToPlayDelay = 100;
 export function MetronomeContextProvider({
   children,
 }: MetronomeContextProviderProps) {
-  const motionRef = useMotionValue("0%");
+  const motionRef = useMotionValue(0);
   const [bpm, setBpm] = useState(100);
   const [lastPlayedSoundAt, setLastPlayedSoundAt] =
     useState<LastSoundInfo | null>(null);
@@ -139,10 +139,10 @@ export function MetronomeContextProvider({
     const soundCallback = () => {
       const beatsPerMinute = bpm * percentSpeed;
       const msPerBeat = (1 / beatsPerMinute) * 60 * 1000;
-      const currentPercentage = Number(motionRef.get().slice(0, -1));
-      const currentSide = currentPercentage > 50 ? "right" : "left";
-      motionRef.set(currentSide === "right" ? "100%" : "0%");
-      animate(motionRef, currentSide === "right" ? "0%" : "100%", {
+      const currentPercentage = motionRef.get();
+      const currentSide = currentPercentage > 90 ? "right" : "left";
+      motionRef.set(currentSide === "right" ? 180 : 0);
+      animate(motionRef, currentSide === "right" ? 0 : 180, {
         duration: msPerBeat / 1000,
         ease: "linear",
       });
