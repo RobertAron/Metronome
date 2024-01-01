@@ -8,6 +8,7 @@ import React, {
 import met1 from "./assets/metsound.mp3";
 import met2 from "./assets/metsound2.mp3";
 import { workerUrlBlob } from "./MetronomeWorker";
+import { MotionValue, animate, useMotionValue } from "framer-motion";
 
 type LastSoundInfo = {
   lastPlayedBeat: number;
@@ -45,6 +46,7 @@ const MetronomeContext = createContext({
   setBeats: setBeatsDefault,
   percentSpeed: 1,
   setPercentSpeed: setPercentSpeedDefault,
+  motionRef: null! as MotionValue<string>,
 });
 const context = new AudioContext();
 const lowerGainTarget = context.createGain();
@@ -72,7 +74,8 @@ function SuperAudio(src: string) {
 const sound1 = SuperAudio(met1);
 const sound2 = SuperAudio(met2);
 
-const myWorker = new Worker(workerUrlBlob);
+const soundCommitWorker = new Worker(workerUrlBlob);
+const soundPlayWorker = new Worker(workerUrlBlob);
 
 type MetronomeContextProviderProps = {
   children: React.ReactNode;
@@ -82,36 +85,12 @@ function clamp(min: number, max: number, value: number) {
   return Math.min(Math.max(value, min), max);
 }
 
-export function timeUntilSoundCommited(
-  bpm: number,
-  percentSpeed: number,
-  beatTypes: BeatType[][],
-  lastPlayedAt: number,
-) {
-  const subdivisionMax = beatTypes[0].length;
-  const soundsPerMinute = bpm * percentSpeed * subdivisionMax;
-  const msPerSound = (1 / soundsPerMinute) * 60 * 1000;
-  const nextSoundAt = msPerSound + lastPlayedAt;
-  const timeUntilNextSound = Math.max(nextSoundAt - Date.now(), 0);
-  return timeUntilNextSound;
-}
-
 const commitToPlayDelay = 100;
-export function timeUntilSoundPlayed(
-  bpm: number,
-  percentSpeed: number,
-  subdivisionMax: BeatType[][],
-  lastPlayedAt: number,
-) {
-  return (
-    timeUntilSoundCommited(bpm, percentSpeed, subdivisionMax, lastPlayedAt) +
-    commitToPlayDelay
-  );
-}
 
 export function MetronomeContextProvider({
   children,
 }: MetronomeContextProviderProps) {
+  const motionRef = useMotionValue("0%");
   const [bpm, setBpm] = useState(100);
   const [lastPlayedSoundAt, setLastPlayedSoundAt] =
     useState<LastSoundInfo | null>(null);
@@ -136,29 +115,53 @@ export function MetronomeContextProvider({
         lastPlayedSubbeat: subBeatIndex,
         lastPlayedAt: playedAt,
       });
+      // if it's a down beat, trigger metronome animation
+      if (subBeatIndex === 0)
+        soundPlayWorker.postMessage({
+          time: timeUntilPlay,
+          params: [],
+        });
     },
     [beats],
   );
 
+  // Connect commit sound events to react state
   useEffect(() => {
     const soundCallback = (m: MessageEvent<[number, number, number]>) =>
       commitToSound(...m.data);
-    myWorker.addEventListener("message", soundCallback);
-    return () => myWorker.removeEventListener("message", soundCallback);
+    soundCommitWorker.addEventListener("message", soundCallback);
+    return () =>
+      soundCommitWorker.removeEventListener("message", soundCallback);
   }, [commitToSound]);
 
+  // Connect sound events to animation state
   useEffect(() => {
-    // after something gets played, setup for the next sound.
+    const soundCallback = () => {
+      const beatsPerMinute = bpm * percentSpeed;
+      const msPerBeat = (1 / beatsPerMinute) * 60 * 1000;
+      const currentPercentage = Number(motionRef.get().slice(0, -1));
+      const currentSide = currentPercentage > 50 ? "right" : "left";
+      motionRef.set(currentSide === "right" ? "100%" : "0%");
+      animate(motionRef, currentSide === "right" ? "0%" : "100%", {
+        duration: msPerBeat / 1000,
+        ease: "linear",
+      });
+    };
+    soundPlayWorker.addEventListener("message", soundCallback);
+    return () => soundPlayWorker.removeEventListener("message", soundCallback);
+  }, [bpm, percentSpeed, motionRef]);
+
+  // on state update send message to the sound commit worker
+  // after something gets played, setup for the next sound.
+  useEffect(() => {
     if (isPlaying) {
-      const timeUntilNextSound = timeUntilSoundCommited(
-        bpm,
-        percentSpeed,
-        beats,
-        lastPlayedSoundAt.lastPlayedAt,
-      );
+      const subdivisionMax = beats[0].length;
+      const soundsPerMinute = bpm * percentSpeed * subdivisionMax;
+      const msPerSound = (1 / soundsPerMinute) * 60 * 1000;
+      const nextSoundAt = msPerSound + lastPlayedSoundAt.lastPlayedAt;
+      const timeUntilComitSound = Math.max(nextSoundAt - Date.now(), 0);
 
       const beatsMax = beats.length;
-      const subdivisionMax = beats[0].length;
       let nextBeat = lastPlayedSoundAt.lastPlayedBeat;
       let nextSubbeat = lastPlayedSoundAt.lastPlayedSubbeat + 1;
       if (nextSubbeat >= subdivisionMax) {
@@ -168,20 +171,24 @@ export function MetronomeContextProvider({
       if (nextBeat >= beatsMax) {
         nextBeat = 0;
       }
-      myWorker.postMessage({
-        time: timeUntilNextSound,
-        params: [nextBeat, nextSubbeat, Date.now() + timeUntilNextSound],
+      soundCommitWorker.postMessage({
+        time: timeUntilComitSound,
+        params: [nextBeat, nextSubbeat, Date.now() + timeUntilComitSound],
       });
-      return () => myWorker.postMessage({});
+      return () => {
+        return soundCommitWorker.postMessage({});
+      };
     }
-  }, [bpm, isPlaying, lastPlayedSoundAt, beats, percentSpeed]);
+  }, [bpm, isPlaying, lastPlayedSoundAt, beats, percentSpeed, motionRef]);
 
+  // "is playing" really means there is some previous sound in the state
   const setIsPlayingWrapper = useCallback((isPlaying: boolean) => {
     if (isPlaying) setLastPlayedSoundAt(lastSoundInit);
     setLastPlayedSoundAt(isPlaying ? lastSoundInit : null);
   }, []);
+  // BPM setter. Restrict bpm range.
   const setBpmWrapper = useCallback((bpm: number) => {
-    setBpm(clamp(1, 300, bpm));
+    setBpm(clamp(40, 300, bpm));
   }, []);
   return (
     <MetronomeContext.Provider
@@ -195,6 +202,7 @@ export function MetronomeContextProvider({
         setBeats,
         percentSpeed,
         setPercentSpeed,
+        motionRef,
       }}
     >
       {children}

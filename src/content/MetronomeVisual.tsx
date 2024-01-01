@@ -1,19 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import {motion, useMotionValue} from 'framer-motion'
-import { useMetronomeContext } from './MetronomeContext';
-import { useEffect } from 'react';
-
+import { motion } from "framer-motion";
+import { useMetronomeContext } from "./MetronomeContext";
 
 export function MetronomeVisual() {
-  const x = useMotionValue(0)
-  const metronome = useMetronomeContext()
+  const { motionRef } = useMetronomeContext();
 
-  useEffect(()=>{
-
-  })
   return (
-    <div className="relative h-1 w-full bg-zinc-800">
-      <motion.div className="h-1 w-1 bg-white" />
+    <div className="relative h-5 w-full bg-zinc-800">
+      <motion.div
+        style={{ left: motionRef }}
+        className="absolute h-5 w-2 bg-white"
+      />
     </div>
   );
 }

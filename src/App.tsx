@@ -8,7 +8,7 @@ import { PauseButton } from "./content/PauseButton";
 import { PercentSpeed } from "./content/PercentSpeed";
 import { MetronomeSlider } from "./content/Slider";
 import { TapIn } from "./content/TapIn";
-// import { MetronomeVisual } from "./content/MetronomeVisual";
+import { MetronomeVisual } from "./content/MetronomeVisual";
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
       <MetronomeContext>
         <div className="flex h-full items-center justify-center p-1 font-sans text-black dark:bg-slate-800 dark:text-white">
           <div className="flex flex-col gap-4">
-            {/* <MetronomeVisual /> */}
+            <MetronomeVisual />
             <Bpm />
             <MetronomeSlider />
             <TapIn />
