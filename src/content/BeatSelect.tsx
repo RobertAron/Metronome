@@ -43,7 +43,7 @@ export const BeatSelect = () => {
                   <Select.Label className="px-6 text-xl">{group}</Select.Label>
                   {values.map((ele) => (
                     <SelectItem value={ele.id} key={ele.id}>
-                      {ele.itemLabel}
+                      <div>{ele.itemLabel}</div>
                     </SelectItem>
                   ))}
                 </Select.Group>

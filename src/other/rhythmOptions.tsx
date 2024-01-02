@@ -2,19 +2,19 @@ import { BeatType } from "../content/MetronomeContext";
 
 export type RhythmConfig = {
   id: string;
-  itemLabel: React.ReactNode;
+  itemLabel: string;
   metronomeBeats: BeatType[][];
 };
 
 function createSecondaryArray(rows: number, columns: number): BeatType[][] {
   const beats: BeatType[][] = Array.from({ length: rows }, () =>
-    Array.from({ length: columns }, () => "secondary")
+    Array.from({ length: columns }, () => "secondary"),
   );
   beats[0][0] = "primary";
   return beats;
 }
 
-function rawBasic(topNumber: number) {
+function rawBasic(topNumber: number): RhythmConfig[] {
   const basic44 = createSecondaryArray(topNumber, 1);
   const basic8ths = createSecondaryArray(topNumber, 2);
   const basicTriplets = createSecondaryArray(topNumber, 3);
@@ -26,44 +26,49 @@ function rawBasic(topNumber: number) {
   return [
     {
       id: `${topNumber}/4-basic`,
-      itemLabel: <div>{topNumber}/4 - Quarter Notes</div>,
+      itemLabel: `${topNumber}/4 - Quarter Notes`,
       metronomeBeats: basic44,
     },
     {
       id: `${topNumber}/4-8th`,
-      itemLabel: <div>{topNumber}/4 - Eighth Notes</div>,
+      itemLabel: `${topNumber}/4 - Eighth Notes`,
       metronomeBeats: basic8ths,
     },
     {
       id: `${topNumber}/4-triplets`,
-      itemLabel: <div>{topNumber}/4 - Triplets</div>,
+      itemLabel: `${topNumber}/4 - Triplets`,
       metronomeBeats: basicTriplets,
     },
     {
       id: `${topNumber}/4-swung`,
-      itemLabel: <div>{topNumber}/4 - Swung</div>,
+      itemLabel: `${topNumber}/4 - Swung`,
       metronomeBeats: basicSwung,
     },
     {
       id: `${topNumber}/4-Sixteenth`,
-      itemLabel: <div>{topNumber}/4 - Sixteenth Notes</div>,
+      itemLabel: `${topNumber}/4 - Sixteenth Notes`,
       metronomeBeats: basicSixteenths,
     },
   ];
 }
 
 export const rhythmOptions: RhythmConfig[] = [
+  ...rawBasic(1).map((ele) => {
+    ele.id = ele.id.replace("1/4", "No Stressed Beat");
+    ele.itemLabel = ele.itemLabel.replace("1/4", "No Stressed Beat");
+    return ele;
+  }),
   ...rawBasic(4),
   ...rawBasic(3),
   ...rawBasic(2),
   {
     id: `6/8-basic`,
-    itemLabel: <div>6/8 - Dotted Quarter</div>,
+    itemLabel: `6/8 - Dotted Quarter`,
     metronomeBeats: [["primary"], ["secondary"]],
   },
   {
     id: `6/8-triplets`,
-    itemLabel: <div>6/8 - Triplets</div>,
+    itemLabel: `6/8 - Triplets`,
     metronomeBeats: [
       ["primary", "secondary", "secondary"],
       ["secondary", "secondary", "secondary"],

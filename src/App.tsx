@@ -9,6 +9,9 @@ import { PercentSpeed } from "./content/PercentSpeed";
 import { MetronomeSlider } from "./content/Slider";
 import { TapIn } from "./content/TapIn";
 import { MetronomeVisual } from "./content/MetronomeVisual";
+import { inject } from "@vercel/analytics";
+
+inject();
 
 function App() {
   return (
