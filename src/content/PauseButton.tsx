@@ -9,7 +9,7 @@ export function PauseButton() {
   return (
     <Toggle.Root
       aria-label="Toggle Playing"
-      className="flex h-8 w-full items-center justify-center rounded border border-black bg-white text-base focus:outline-none focus-visible:border-amber-500 focus-visible:shadow-[0_0_0_2px] focus-visible:shadow-amber-500 hocus:bg-amber-50"
+      className="flex h-8 w-full items-center justify-center rounded border border-black text-base focus:outline-none focus-visible:border-amber-500 focus-visible:shadow-[0_0_0_2px] focus-visible:shadow-amber-500 hocus:bg-amber-500/10 dark:border-slate-700"
       pressed={isPlaying}
       onPressedChange={() => setIsPlaying(!isPlaying)}
     >

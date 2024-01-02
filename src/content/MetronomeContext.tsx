@@ -9,6 +9,7 @@ import met1 from "./assets/metsound.mp3";
 import met2 from "./assets/metsound2.mp3";
 import { workerUrlBlob } from "./MetronomeWorker";
 import { MotionValue, animate, useMotionValue } from "framer-motion";
+import { rhythmOptions } from "../other/rhythmOptions";
 
 type LastSoundInfo = {
   lastPlayedBeat: number;
@@ -24,12 +25,7 @@ const lastSoundInit: LastSoundInfo = {
 const lastSoundDefault = null as LastSoundInfo | null;
 
 export type BeatType = "primary" | "secondary" | "rest";
-const beatDefault: BeatType[][] = [
-  ["primary"],
-  ["secondary"],
-  ["secondary"],
-  ["secondary"],
-];
+const beatDefault: BeatType[][] = rhythmOptions[0].metronomeBeats;
 const setBeatsDefault: (beats: BeatType[][]) => void = () => {};
 
 const setIsPlayingDefault: (isPlaying: boolean) => void = () => {};

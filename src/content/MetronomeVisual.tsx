@@ -60,7 +60,7 @@ export function MetronomeVisual() {
         <motion.path
           d={`M -${smaller.arcFillMidpoint} 0 A ${smaller.arcFillMidpoint} ${smaller.arcFillMidpoint} 0 0 1 ${smaller.arcFillMidpoint} 0`}
           // stroke="green"
-          className="stroke-slate-900"
+          className="stroke-slate-700"
           fill="transparent"
           strokeLinecap="round"
           strokeWidth={smaller.strokeWidth}

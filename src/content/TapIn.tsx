@@ -29,7 +29,7 @@ export function TapIn() {
   return (
     <button
       className={
-        "relative flex justify-center truncate rounded border border-black text-black hocus:border-amber-500 hocus:bg-amber-50 hocus:shadow-[0_0_0_2px] hocus:shadow-amber-500 hocus:outline-none"
+        "relative flex justify-center truncate rounded border border-black dark:border-slate-700 hocus:border-amber-500 dark:hocus:bg-slate-600 hocus:bg-amber-500/10 hocus:shadow-[0_0_0_2px] hocus:shadow-amber-500 hocus:outline-none"
       }
       onClick={updateTapInTimes}
     >

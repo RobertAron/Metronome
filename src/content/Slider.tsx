@@ -22,11 +22,11 @@ export function MetronomeSlider({
       onValueChange={([newVal]) => setBpm(newVal)}
       orientation={direction}
     >
-      <Slider.Track className="relative h-[3px] grow rounded-full bg-zinc-400 transition-colors group-focus-within:bg-zinc-500 group-hover:bg-zinc-500">
-        <Slider.Range className="absolute h-full rounded-full bg-zinc-800 transition-colors group-hover:bg-zinc-950" />
+      <Slider.Track className="relative h-[3px] grow rounded-full bg-zinc-400 transition-colors group-focus-within:bg-zinc-500 group-hover:bg-zinc-500 dark:bg-slate-900 dark:group-focus-within:bg-slate-950 dark:group-hover:bg-slate-950">
+        <Slider.Range className="absolute h-full rounded-full bg-zinc-600 transition-colors group-hover:bg-black group-focus-within:bg-black dark:bg-slate-700 dark:group-focus-within:bg-slate-600 dark:group-hover:bg-slate-600" />
       </Slider.Track>
       <Slider.Thumb
-        className="block h-5 w-5 rounded-full border-4 border-zinc-700 bg-white transition-all focus:outline-none group-focus-within:border-[5px] group-focus-within:border-amber-500 group-hover:border-[5px] group-hover:border-amber-500 "
+        className="block h-5 w-5 rounded-full border-4 border-zinc-600 bg-white transition-all focus:outline-none group-focus-within:border-[5px] group-focus-within:border-amber-500 group-hover:border-[5px] group-hover:border-amber-500 dark:border-slate-700 dark:bg-black "
         aria-label="Beats Per Minute"
       />
     </Slider.Root>
