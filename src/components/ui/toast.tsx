@@ -47,6 +47,7 @@ const Toast = React.forwardRef<
     <ToastPrimitives.Root
       ref={ref}
       className={cn(toastVariants({ variant }), className)}
+      type="background"
       {...props}
     />
   )
@@ -79,9 +80,10 @@ const ToastClose = React.forwardRef<
       className
     )}
     toast-close=""
+    aria-label="Close Notification"
     {...props}
   >
-    <Cross2Icon className="h-4 w-4" />
+    <Cross2Icon className="h-4 w-4" aria-hidden/>
   </ToastPrimitives.Close>
 ))
 ToastClose.displayName = ToastPrimitives.Close.displayName

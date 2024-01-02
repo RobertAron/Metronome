@@ -6,17 +6,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Web site created using create-react-app"
+      content="A metronome app! Set the tempo, time signature, subdivision, practice percentage, and get practicing! 100% free. Works offline on any device."
     />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
     <meta name="msapplication-TileColor" content="#ff0000" />
     <meta name="theme-color" content="#1b1b1e" />
+    <meta property="og:title" content="Metronome App" />
+    <meta
+      property="og:description"
+      content="A metronome app! Set the tempo, time signature, subdivision, practice percentage, and get practicing! 100% free. Works offline on any device."
+    />
+    <meta
+      property="og:image"
+      content="https://www.metronome-app.com/android-chrome-512x512.png"
+    />
+    <meta property="og:url" content="https://www.metronome-app.com/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Metronome App" />
+    <meta
+      name="twitter:description"
+      content="A metronome app! Set the tempo, time signature, subdivision, practice percentage, and get practicing! 100% free. Works offline on any device."
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.metronome-app.com/android-chrome-512x512.png"
+    />
+
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>Metronome App</title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Metronome App",
+        "operatingSystem": "Web",
+        "applicationCategory": "MusicApplication",
+        "description": "A metronome app! Set the tempo, time signature, subdivision, practice percentage, and get practicing! 100% free. Works offline on any device.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0.00",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <noscript>Javascript is required to access audio hardware audio.</noscript>
     <div id="root"></div>
   </body>
 </html>
