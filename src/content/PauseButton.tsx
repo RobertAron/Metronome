@@ -1,7 +1,7 @@
 import { PauseIcon, PlayIcon } from "@radix-ui/react-icons";
 import * as Toggle from "@radix-ui/react-toggle";
 import { cn } from "../other/cn";
-import { useMetronomeContext } from "./MetronomeContext";
+import { audioContext, useMetronomeContext } from "./MetronomeContext";
 
 export function PauseButton() {
   const { setIsPlaying, isPlaying } = useMetronomeContext();
@@ -11,7 +11,12 @@ export function PauseButton() {
       aria-label="Toggle Playing"
       className="flex h-8 w-full items-center justify-center rounded border border-black text-base focus:outline-none focus-visible:border-amber-500 focus-visible:shadow-[0_0_0_2px] focus-visible:shadow-amber-500 hocus:bg-amber-500/10 dark:border-slate-700"
       pressed={isPlaying}
-      onPressedChange={() => setIsPlaying(!isPlaying)}
+      onPressedChange={() => {
+        // resuming the audio context is needed for safari
+        // it has to happen within a user interaction.
+        audioContext.resume()
+        return setIsPlaying(!isPlaying);
+      }}
     >
       <div className="grid grid-cols-[min-content_1fr] items-center gap-2">
         <div className="col-start-1 col-end-1 h-5 w-5">

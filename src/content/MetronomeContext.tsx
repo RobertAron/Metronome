@@ -44,25 +44,24 @@ const MetronomeContext = createContext({
   setPercentSpeed: setPercentSpeedDefault,
   motionRef: null! as MotionValue<number>,
 });
-const context = new AudioContext();
-const lowerGainTarget = context.createGain();
+export const audioContext = new AudioContext();
+const lowerGainTarget = audioContext.createGain();
 lowerGainTarget.gain.value = 0.5;
-lowerGainTarget.connect(context.destination);
+lowerGainTarget.connect(audioContext.destination);
 
 // allow sound to overlap
 function SuperAudio(src: string) {
   let audioBuffer: AudioBuffer | null = null;
   fetch(src)
     .then((response) => response.arrayBuffer())
-    .then((arrayBuffer) => context.decodeAudioData(arrayBuffer))
+    .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer))
     .then((bufffer) => (audioBuffer = bufffer));
   return {
     play(delay: number, emphasize: boolean) {
-      const bufferSource = context.createBufferSource();
+      const bufferSource = audioContext.createBufferSource();
       bufferSource.buffer = audioBuffer;
-      bufferSource.connect(emphasize ? context.destination : lowerGainTarget);
-      bufferSource.context.createGain();
-      bufferSource.start(context.currentTime + delay / 1000);
+      bufferSource.connect(emphasize ? audioContext.destination : lowerGainTarget);
+      bufferSource.start(audioContext.currentTime + delay / 1000);
     },
   };
 }
