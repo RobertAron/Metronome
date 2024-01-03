@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useState,
   useCallback,
+  useRef,
 } from "react";
 import met1 from "./assets/metsound.mp3";
 import met2 from "./assets/metsound2.mp3";
@@ -60,7 +61,8 @@ function SuperAudio(src: string) {
     play(delay: number, emphasize: boolean) {
       const bufferSource = audioContext.createBufferSource();
       bufferSource.buffer = audioBuffer;
-      bufferSource.connect(emphasize ? audioContext.destination : lowerGainTarget);
+      const target = emphasize ? audioContext.destination : lowerGainTarget;
+      bufferSource.connect(target);
       bufferSource.start(audioContext.currentTime + delay / 1000);
     },
   };
@@ -200,6 +202,7 @@ export function MetronomeContextProvider({
         motionRef,
       }}
     >
+      <IosAudioHack />
       {children}
     </MetronomeContext.Provider>
   );
@@ -207,6 +210,55 @@ export function MetronomeContextProvider({
 
 function useMetronomeContext() {
   return useContext(MetronomeContext);
+}
+
+//======================================================
+// Absolute BS incoming
+// https://github.com/swevans/unmute/blob/master/dev/src/unmute.ts#L191
+//======================================================
+/**
+ * A very short bit of silence to be played with <audio>, which forces AudioContext onto the audio channel.
+ * NOTE: The silence MP3 must be high quality, when web audio sounds are played in parallel the web audio sound is mixed to match the bitrate of the html sound.
+ * This file is 0.01 seconds of silence VBR220-260 Joint Stereo 859B
+ * The str below is a "compressed" version using poor mans huffman encoding, saves about 0.5kb
+ */
+const silence =
+  "data:audio/mpeg;base64,//uQx" +
+  "A".repeat(23) +
+  "WGluZwAAAA8AAAACAAACcQCA" +
+  "gICA".repeat(16) +
+  "/".repeat(66) +
+  "8AAABhTEFNRTMuMTAwA8MAAAAAAAAAABQgJAUHQQAB9AAAAnGMHkkI" +
+  "A".repeat(320) +
+  "//sQxAADgnABGiAAQBCqgCRMAAgEAH" +
+  "/".repeat(15) +
+  "7+n/9FTuQsQH//////2NG0jWUGlio5gLQTOtIoeR2WX////X4s9Atb/JRVCbBUpeRUq" +
+  "/".repeat(18) +
+  "9RUi0f2jn/+xDECgPCjAEQAABN4AAANIAAAAQVTEFNRTMuMTAw" +
+  "V".repeat(97) +
+  "Q==";
+
+// console.log(silence);
+
+// Hack for iphones that have the ringer muted.
+// Running this empty audio forces all sounds to the media channel
+function IosAudioHack() {
+  const { isPlaying } = useMetronomeContext();
+  const ref = useRef<HTMLAudioElement>(null!);
+  useEffect(() => {
+    if (isPlaying) ref.current.play();
+    else ref.current.pause();
+  }, [isPlaying]);
+  return (
+    <audio
+      ref={ref}
+      className="hidden"
+      x-webkit-airplay="deny"
+      src={silence}
+      preload="auto"
+      loop
+    />
+  );
 }
 
 export { MetronomeContextProvider as MetronomeContext, useMetronomeContext };

@@ -14,7 +14,7 @@ export function PauseButton() {
       onPressedChange={() => {
         // resuming the audio context is needed for safari
         // it has to happen within a user interaction.
-        audioContext.resume()
+        audioContext.resume();
         return setIsPlaying(!isPlaying);
       }}
     >
