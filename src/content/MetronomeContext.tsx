@@ -238,14 +238,25 @@ const silence =
   "V".repeat(97) +
   "Q==";
 
-// console.log(silence);
-
 // Hack for iphones that have the ringer muted.
 // Running this empty audio forces all sounds to the media channel
 function IosAudioHack() {
-  const { isPlaying } = useMetronomeContext();
-  const ref = useRef<HTMLAudioElement>(null!);
+  const { isPlaying, setIsPlaying } = useMetronomeContext();
+  const ref = useRef<HTMLAudioElement>(null);
+  // this is needed because there's no way to hide the media alerts so unless there is no media playing.
   useEffect(() => {
+    const onVisChange = () => {
+      if (document.visibilityState === "hidden") setIsPlaying(false);
+    };
+    if (window.navigator.userAgent.includes("iPhone")) {
+      document.addEventListener("visibilitychange", onVisChange);
+    }
+    return () => {
+      document.removeEventListener("visibilitychange", onVisChange);
+    };
+  }, [isPlaying, setIsPlaying]);
+  useEffect(() => {
+    if (ref.current === null) return;
     if (isPlaying) ref.current.play();
     else ref.current.pause();
   }, [isPlaying]);
@@ -254,7 +265,7 @@ function IosAudioHack() {
       ref={ref}
       className="hidden"
       x-webkit-airplay="deny"
-      src={silence}
+      src={isPlaying ? silence : "."}
       preload="auto"
       loop
     />
