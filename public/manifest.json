@@ -1,4 +1,5 @@
 {
+  "id": "metronome-app-pwa",
   "name": "Metronome App",
   "description": "A metronome app! Set the tempo, time signature, subdivision, practice percentage, and get practicing!",
   "short_name": "Metronome",
@@ -61,5 +62,10 @@
   ],
   "theme_color": "#1b1b1e",
   "background_color": "#1b1b1e",
-  "display": "standalone"
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "window-controls-overlay",
+    "browser"
+  ]
 }
