@@ -62,9 +62,8 @@
   ],
   "theme_color": "#1b1b1e",
   "background_color": "#1b1b1e",
-  "display": "fullscreen",
+  "display": "standalone",
   "display_override": [
-    "fullscreen",
     "standalone",
     "minimal-ui",
     "browser",
