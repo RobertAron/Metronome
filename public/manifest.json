@@ -8,18 +8,18 @@
   "orientation": "portrait",
   "screenshots": [
     {
-      "src":"screenshot.png",
-      "sizes":"1125x2436",
-      "type":"image/png",
-      "description":"Screenshot of the metronome",
+      "src": "/screenshot.png",
+      "sizes": "1125x2436",
+      "type": "image/png",
+      "description": "Screenshot of the metronome",
       "purpose": "any"
     }
   ],
   "shortcuts": [
     {
-      "name":"Metronome",
-      "url":"/",
-      "description":"Start the metronome",
+      "name": "Metronome",
+      "url": "/",
+      "description": "Start the metronome",
       "icons": [
         {
           "src": "/metronome-icon-96.png",
@@ -67,6 +67,9 @@
     "fullscreen",
     "standalone",
     "minimal-ui",
-    "browser"
-  ]
+    "browser",
+    "window-controls-overlay"
+  ],
+  "dir": "ltr",
+  "lang": "en"
 }
