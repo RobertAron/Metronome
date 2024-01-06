@@ -62,10 +62,11 @@
   ],
   "theme_color": "#1b1b1e",
   "background_color": "#1b1b1e",
-  "display": "standalone",
+  "display": "fullscreen",
   "display_override": [
+    "fullscreen",
     "standalone",
-    "window-controls-overlay",
+    "minimal-ui",
     "browser"
   ]
 }
