@@ -1,0 +1,14 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "com.metronome_app.twa",
+            "sha256_cert_fingerprints": [
+                "DD:A9:BA:1F:CC:43:EE:F4:07:34:45:B1:9B:C7:FE:86:5C:82:52:06:F7:57:99:92:03:A4:76:E5:68:13:E9:A9"
+            ]
+        }
+    }
+]
