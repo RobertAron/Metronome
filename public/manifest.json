@@ -12,7 +12,16 @@
       "sizes": "1125x2436",
       "type": "image/png",
       "description": "Screenshot of the metronome",
-      "purpose": "any"
+      "purpose": "any",
+      "form_factor":"narrow"
+    },
+    {
+      "src":"/screenshot-wide.png",
+      "sizes":"2061x1307",
+      "type":"image/png",
+      "description":"Screenshot of the metronome - wide",
+      "purpose":"any",
+      "form_factor":"wide"
     }
   ],
   "shortcuts": [
@@ -32,7 +41,7 @@
   "icons": [
     {
       "src": "favicon.ico",
-      "sizes": "512x512",
+      "sizes": "256x256",
       "type": "image/x-icon",
       "purpose": "any"
     },
