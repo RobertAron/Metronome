@@ -12,8 +12,11 @@ import { PercentSpeed } from "./content/PercentSpeed";
 import { MetronomeSlider } from "./content/Slider";
 import { TapIn } from "./content/TapIn";
 import { LazyMotion, domAnimation } from "framer-motion";
+import { isLocalhost } from "./serviceWorkerRegistration";
 
-inject();
+inject({
+  mode: isLocalhost ? "development" : "auto",
+});
 
 function App() {
   return (
