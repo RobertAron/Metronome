@@ -1,10 +1,19 @@
 import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import * as Select from "@radix-ui/react-select";
-import groupBy from "lodash.groupby";
 import React from "react";
 import { cn } from "../other/cn";
 import { rhythmOptions } from "../other/rhythmOptions";
 import { useMetronomeContext } from "./MetronomeContext";
+
+function groupBy<T>(items: T[], cb: (item: T) => string) {
+  let result: Record<string, T[]> = {};
+  for (const item of items) {
+    const groupId = cb(item);
+    if (result[groupId] === undefined) result[groupId] = [];
+    result[groupId].push(item);
+  }
+  return result;
+}
 
 export const BeatSelect = () => {
   const { setBeats } = useMetronomeContext();
@@ -22,7 +31,7 @@ export const BeatSelect = () => {
         aria-label="Beat Options"
       >
         <Select.Value placeholder="Select a rhythm..." className="flex-grow" />
-        <Select.Icon className="font-bold">
+        <Select.Icon className="font-bold" asChild>
           <ChevronDownIcon />
         </Select.Icon>
       </Select.Trigger>

@@ -27,7 +27,7 @@ export function Toaster() {
           </Toast>
         )
       })}
-      <ToastViewport />
+      {toasts.length>0 && <ToastViewport />}
     </ToastProvider>
   )
 }

@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useMetronomeContext } from "./MetronomeContext";
 
 const pathVariants = {
@@ -45,7 +45,7 @@ export function MetronomeVisual() {
 
   return (
     <div className="w-full">
-      <motion.svg
+      <m.svg
         viewBox={`-${outer.arcFillOuterPoint} -${outer.arcFillOuterPoint} ${
           outer.arcFillOuterPoint * 2
         } ${outer.arcFillOuterPoint + outer.strokeWidth}`}
@@ -57,7 +57,7 @@ export function MetronomeVisual() {
           height: "auto",
         }}
       >
-        <motion.path
+        <m.path
           d={`M -${smaller.arcFillMidpoint} 0 A ${smaller.arcFillMidpoint} ${smaller.arcFillMidpoint} 0 0 1 ${smaller.arcFillMidpoint} 0`}
           // stroke="green"
           className="stroke-slate-700"
@@ -68,12 +68,12 @@ export function MetronomeVisual() {
           initial="initial"
           animate="animate"
         />
-        <motion.path
+        <m.path
           className="!origin-[0px_0px_0px] fill-amber-500"
           d={circlePath(-outer.arcFillMidpoint, 0, outer.strokeWidth / 2)}
           style={{ rotate: motionRef }}
         />
-      </motion.svg>
+      </m.svg>
     </div>
   );
 }

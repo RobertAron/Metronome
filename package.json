@@ -22,11 +22,10 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "framer-motion": "^10.16.16",
-    "lodash.groupby": "^4.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "tailwind-merge": "^2.2.0",
+    "source-map-explorer": "^2.5.3",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4",
@@ -47,7 +46,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "eslintConfig": {
     "extends": [
@@ -68,7 +68,6 @@
     ]
   },
   "devDependencies": {
-    "@types/lodash.groupby": "^4.6.9",
     "comlink-loader": "^2.0.0",
     "prettier": "3.1.1",
     "prettier-plugin-tailwindcss": "^0.5.10",

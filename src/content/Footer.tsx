@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useState } from "react";
 
 function DarkModeToggle() {
@@ -6,7 +6,7 @@ function DarkModeToggle() {
     [...document.documentElement.classList].includes("dark"),
   );
   return (
-    <motion.button
+    <m.button
       className="h-min w-min rounded-full border border-black"
       aria-label="toggle dark mode"
       onClick={() => {
@@ -32,7 +32,7 @@ function DarkModeToggle() {
     >
       <div className="h-[14px] w-[28px] rounded-t-full bg-black" />
       <div className="h-[14px] w-[28px] rounded-b-full bg-white" />
-    </motion.button>
+    </m.button>
   );
 }
 

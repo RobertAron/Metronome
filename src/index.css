@@ -23,3 +23,12 @@ body,
   font-style: normal; /* Adjust for italic or other styles if available */
   font-variation-settings: "wght" 100 900; /* Define the font weight axis */
 }
+
+
+:root {
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
+}
