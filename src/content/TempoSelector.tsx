@@ -10,12 +10,12 @@ export function TempoSelector() {
       <MetronomeSlider />
       <div className="flex flex-row justify-between">
         <span className="flex flex-row">
-          <button className={buttonStyle} onClick={e => setBpm(bpm-10)}> <p className="p-1">-10</p> </button>
-          <button className={buttonStyle} onClick={e => setBpm(bpm-1)}> <p className="p-1">-1</p> </button>
+          <button className={buttonStyle} onClick={() => setBpm(bpm-10)}> <p className="p-1">-10</p> </button>
+          <button className={buttonStyle} onClick={() => setBpm(bpm-1)}> <p className="p-1">-1</p> </button>
         </span>
         <span className="flex flex-row">
-          <button className={buttonStyle} onClick={e => setBpm(bpm+1)}> <p className="p-1">+1</p> </button>
-          <button className={buttonStyle} onClick={e => setBpm(bpm+10)}> <p className="p-1">+10</p> </button>
+          <button className={buttonStyle} onClick={() => setBpm(bpm+1)}> <p className="p-1">+1</p> </button>
+          <button className={buttonStyle} onClick={() => setBpm(bpm+10)}> <p className="p-1">+10</p> </button>
         </span>
       </div>
     </div>
