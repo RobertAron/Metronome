@@ -9,10 +9,10 @@ import { MetronomeContext } from "./content/MetronomeContext";
 import { MetronomeVisual } from "./content/MetronomeVisual";
 import { PauseButton } from "./content/PauseButton";
 import { PercentSpeed } from "./content/PercentSpeed";
-import { MetronomeSlider } from "./content/Slider";
 import { TapIn } from "./content/TapIn";
 import { LazyMotion, domAnimation } from "framer-motion";
 import { isLocalhost } from "./serviceWorkerRegistration";
+import { TempoSelector } from "./content/TempoSelector";
 
 inject({
   mode: isLocalhost ? "development" : "auto",
@@ -31,7 +31,7 @@ function App() {
             <div className="flex flex-col gap-4">
               <MetronomeVisual />
               <Bpm />
-              <MetronomeSlider />
+              <TempoSelector />
               <TapIn />
               <PercentSpeed />
               <BeatSelect />

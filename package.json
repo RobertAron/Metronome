@@ -69,8 +69,15 @@
   },
   "devDependencies": {
     "comlink-loader": "^2.0.0",
+    "eslint-config-react-app": "^7.0.1",
     "prettier": "3.1.1",
     "prettier-plugin-tailwindcss": "^0.5.10",
     "tailwindcss": "^3.3.5"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "core-js",
+      "core-js-pure"
+    ]
   }
 }
