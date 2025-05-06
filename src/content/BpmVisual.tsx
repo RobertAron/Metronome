@@ -5,22 +5,17 @@ export function Bpm() {
   return (
     <div>
       <div className="flex items-baseline">
-      <span className="text-6xl font-mono">
-        {bpm.toFixed(2).padStart(6, "0")}
-      </span>
+        <span className="font-mono text-6xl">
+          {bpm.toFixed(2).padStart(6, "0")}
+        </span>
         <span className="text-lg">BPM</span>
       </div>
-
-      {
-        percentSpeed !== 1 ? (
-          <div className="flex items-baseline text-gray-500 space-x-1">
-            <span className="text-xl font-mono">
-              {(bpm * percentSpeed).toFixed(2).padStart(6, "0")}
-            </span>
-            <span className="text-lg">BPM</span>
-          </div>
-        ) : null
-      }
+      {percentSpeed !== 1 && (
+        <div className="flex items-baseline space-x-1 font-mono text-lg text-gray-500">
+          <span>{(bpm * percentSpeed).toFixed(2).padStart(6, "0")}</span>
+          <span>BPM</span>
+        </div>
+      )}
     </div>
   );
 }

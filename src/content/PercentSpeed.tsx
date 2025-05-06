@@ -12,7 +12,7 @@ export function PercentSpeed() {
       onValueChange={(val) => {
         if (val === "") return;
         const newValue = Number(val);
-        if (!isNaN(newValue)) setPercentSpeed(newValue);
+        if (!Number.isNaN(newValue)) setPercentSpeed(newValue);
       }}
     >
       {new Array(6).fill(null).map((_, index) => {
