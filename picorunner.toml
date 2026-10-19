@@ -1,0 +1,31 @@
+schema = 1
+name = "Metronome"
+
+[runtime]
+kind = "node"
+version = "24"
+package_manager = "npm"
+
+[[setup.steps]]
+kind = "dependencies"
+locked = true
+
+[[setup.steps]]
+run = ["npm", "run", "build"]
+
+[launch]
+command = ["npm", "start"]
+host = "127.0.0.1"
+host_env = "HOST"
+port = 3000
+port_env = "PORT"
+environment = { BROWSER = "none" }
+
+[health]
+type = "http"
+path = "/"
+timeout_seconds = 90
+
+[persistence]
+# Theme uses browser storage; tempo and rhythm settings are session-only.
+paths = []
